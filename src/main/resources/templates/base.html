@@ -3,22 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Timekeeper</title>
+    <title>{#insert title}Default Title{/}</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="/assets/style.css">
 </head>
 <body>
 <div class="container-fluid">
-    <div class="banner lead">
-        <h3>
-           Time Keeper
-            <small class="text-muted">A time tracking and reporter tool by <strong>L</strong>unatech</small>
-        </h3>
-        <img src="/images/duotone.png" class="img-fluid" alt="Responsive image">
-        <p class="lead">
-            Congratulation ! If you see this web page in your browser, it means that Quarkus was successfully started
-        </p>
 
-    </div>
+    <header>
+        <div class="navbar navbar-dark bg-dark box-shadow">
+            <div class="container d-flex justify-content-between">
+                <a href="/"><h3 class="white">Time Keeper  <small class="text-muted">A time tracking and reporting tool by Lunatech</small></h3></a>
+            </div>
+        </div>
+    </header>
+
+    <main class="bd-content p-5" role="main">
+        {#insert body}Body is not defined{/}
+    </main>
+
 </div>
 
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>

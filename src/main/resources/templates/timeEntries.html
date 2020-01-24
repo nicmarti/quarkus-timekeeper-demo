@@ -1,0 +1,14 @@
+{@java.util.List<TimeEntry> timeEntries}
+{#include base.html}
+    {#title}All TimeEntries{/title}
+
+    {#body}
+        {#if timeEntries.size == 0}
+            There is no time entry yet.
+        {/if}
+        {#for entry in timeEntries}
+            <h2>{count} {entry.entryId ?: 'No ID'}</h2>
+            <p>{entry.description} by {entry.author}</p>
+        {/for}
+    {/body}
+{/include}

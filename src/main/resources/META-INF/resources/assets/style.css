@@ -1,0 +1,10 @@
+.white{
+    color:white;
+}
+.time-background{
+    background-image: url("/images/duotone.png");
+    background-repeat: no-repeat;
+    background-blend-mode: color-burn;
+    background-attachment: scroll;
+    background-size: cover;
+}

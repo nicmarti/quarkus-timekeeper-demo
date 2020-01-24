@@ -59,4 +59,5 @@ pom.xml.versionsBackup
 release.properties
 
 .mvn
+lsp/
 

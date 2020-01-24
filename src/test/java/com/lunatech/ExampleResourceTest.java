@@ -18,4 +18,13 @@ public class ExampleResourceTest {
              .body(is("hello"));
     }
 
+    @Test
+    public void testQuteTemplate() {
+        given()
+                .when().get("/hello/Nicolas")
+                .then()
+                .statusCode(200)
+                .body(is("Hello Nicolas !"));
+    }
+
 }

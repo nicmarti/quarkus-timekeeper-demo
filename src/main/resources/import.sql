@@ -1,0 +1,2 @@
+INSERT INTO TimeEntry(id, entryId, description, author) VALUES (nextval('hibernate_sequence'), 'AFFBC233ADDFF', 'Create a new project for Time-keeper', 'nicolas.martignole@lunatech.fr');
+INSERT INTO TimeEntry(id, entryId, description, author) VALUES (nextval('hibernate_sequence'), 'FACC2233RFFFF', 'Meeting with a customer for a new project', 'nicolas.martignole@lunatech.fr');

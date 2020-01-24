@@ -1,2 +1,4 @@
-INSERT INTO TimeEntry(id, entryId, description, author) VALUES (nextval('hibernate_sequence'), 'AFFBC233ADDFF', 'Create a new project for Time-keeper', 'nicolas.martignole@lunatech.fr');
-INSERT INTO TimeEntry(id, entryId, description, author) VALUES (nextval('hibernate_sequence'), 'FACC2233RFFFF', 'Meeting with a customer for a new project', 'nicolas.martignole@lunatech.fr');
+INSERT INTO TimeEntry(id, entryId, description, author) VALUES (nextval('hibernate_sequence'), 'AFFBC233ADDFF', 'Create a new project for Time-keeper', 'pamela.rose@lunatech.com');
+INSERT INTO TimeEntry(id, entryId, description, author) VALUES (nextval('hibernate_sequence'), 'AFFBC233ADDFF', 'Development for project Dinpa on ticket 344', 'pamela.rose@lunatech.com');
+INSERT INTO TimeEntry(id, entryId, description, author) VALUES (nextval('hibernate_sequence'), 'AFFBC233ADDFF', 'PR review and QA for project Dinpa', 'pamela.rose@lunatech.com');
+INSERT INTO TimeEntry(id, entryId, description, author) VALUES (nextval('hibernate_sequence'), 'FACC2233RFFFF', 'Meeting with a customer for a new project', 'clark.kent@lunatech.fr');

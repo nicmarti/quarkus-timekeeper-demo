@@ -10,7 +10,11 @@
             <h2>{timeEntry.entryId ?: 'No ID'}</h2>
       </div>
         <div class="card-body">
-            <p>{timeEntry.description} by {timeEntry.author}</p>
+            <p class="details">{timeEntry.description}</p>
+            <p>Created : {timeEntry.created} by {timeEntry.author}</p>
+            <p>Updated : {timeEntry.updated}</p>
+            <p>Duration : {timeEntry.durationAsText}</p>
+
         </div>
 </div>
 </div>

@@ -1,4 +1,4 @@
-INSERT INTO TimeEntry(id, entryId, description, author) VALUES (nextval('hibernate_sequence'), 'AFFBC233ADDFF', 'Create a new project for Time-keeper', 'pamela.rose@lunatech.com');
-INSERT INTO TimeEntry(id, entryId, description, author) VALUES (nextval('hibernate_sequence'), 'AFFBC233ADDFF', 'Development for project Dinpa on ticket 344', 'pamela.rose@lunatech.com');
-INSERT INTO TimeEntry(id, entryId, description, author) VALUES (nextval('hibernate_sequence'), 'AFFBC233ADDFF', 'PR review and QA for project Dinpa', 'pamela.rose@lunatech.com');
-INSERT INTO TimeEntry(id, entryId, description, author) VALUES (nextval('hibernate_sequence'), 'FACC2233RFFFF', 'Meeting with a customer for a new project', 'clark.kent@lunatech.fr');
+INSERT INTO TimeEntry(id, entryId, description, author, duration, create_date) VALUES (nextval('hibernate_sequence'), 'AFFBC233ADDFF', 'Create a new project for Time-keeper', 'pamela.rose@lunatech.com',3600000000000, '2020-01-25 18:10:25-07');
+INSERT INTO TimeEntry(id, entryId, description, author, duration, create_date) VALUES (nextval('hibernate_sequence'), 'AFFBC233ADDFF', 'Development for project Dinpa on ticket 344', 'pamela.rose@lunatech.com',3600000000000, '2020-01-25 13:10:00-07');
+INSERT INTO TimeEntry(id, entryId, description, author, duration, create_date) VALUES (nextval('hibernate_sequence'), 'AFFBC233ADDFF', 'PR review and QA for project Dinpa', 'pamela.rose@lunatech.com',7200000000000, '2020-01-25 12:10:25-07');
+INSERT INTO TimeEntry(id, entryId, description, author, duration, create_date) VALUES (nextval('hibernate_sequence'), 'FACC2233RFFFF', 'Meeting with a customer for a new project', 'clark.kent@lunatech.fr',3600000000000, '2020-01-25 18:10:25-07');

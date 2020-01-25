@@ -6,9 +6,12 @@
         {#if timeEntries.size == 0}
             There is no time entry yet.
         {/if}
+    <ul>
         {#for entry in timeEntries}
-            <h2>{count} {entry.entryId ?: 'No ID'}</h2>
-            <p>{entry.description} by {entry.author}</p>
+            <li>{count} - {entry.description ?: 'No description'} <a href="/times/{entry.id}">see details</a>
+            <p>created by {entry.author}</p>
+            </li>
         {/for}
+    </ul>
     {/body}
 {/include}

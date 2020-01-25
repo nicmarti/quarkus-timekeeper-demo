@@ -1,0 +1,21 @@
+{@com.lunatech.models.TimeEntry timeEntry}
+{#include base.html}
+    {#title}Detail for Time Entry{/title}
+
+    {#body}
+
+<div class="col-4">
+<div class="card">
+      <div class="card-header">
+            <h2>{timeEntry.entryId ?: 'No ID'}</h2>
+      </div>
+        <div class="card-body">
+            <p>{timeEntry.description} by {timeEntry.author}</p>
+        </div>
+</div>
+</div>
+<div class="col-12">
+    <a href="/times">&lt;&lt; Back to the list</a>
+</div>
+    {/body}
+{/include}

@@ -1,4 +1,5 @@
-{@com.lunatech.models.TimeEntry timeEntry}
+{@com.lunatech.models.forms.Form<TimeEntry> formTimeEntry}
+{@com.lunatech.forms.FormErrors formErrors}
 {#include base.html}
 {#title}New Time Entry{/title}
 
@@ -10,7 +11,15 @@
             <h2>Create a new time entry</h2>
         </div>
         <div class="card-body">
+            {! no router so we hard-code the URL... !}
             <form action="/times/new" method="POST" class="form">
+
+                {! There is no CSRF protection here !}
+
+                {! I tried with a #{if formErrors != "NOT_FOUND"} { ... } but it does not work. !}
+                {! So I decided to add a RawString function to render the HTML (which is not the best practice) !}
+                {formErrors.renderIfErrors ?: ''}
+
                 <div class="form-group">
                     <label for="description"><i class="icon ion-md-clipboard"></i> Task description :</label>
                     <input name="description" type="text" class="form-control" id="description" aria-describedby="emailHelp" placeholder="Enter Task description">

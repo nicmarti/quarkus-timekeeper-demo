@@ -1,5 +1,7 @@
 package com.lunatech.controllers;
 
+import com.lunatech.forms.FormErrors;
+import com.lunatech.forms.FormFactory;
 import com.lunatech.models.TimeEntry;
 import com.lunatech.models.TimeEntryDTO;
 import com.lunatech.services.TimeEntryService;
@@ -68,17 +70,17 @@ public class TimeEntryController {
     @POST
     @Path("/new")
     @Consumes(APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.TEXT_HTML)
     public Response save(@Form TimeEntryDTO timeEntryDTO) {
         Either<String, TimeEntry> validTimeEntryOrError = timeEntryDTO.toValidTimeEntry();
         if (validTimeEntryOrError.isLeft()) {
             // A best practice is not to throw a WebApplicationException here, but to return a 400 Bad Request
-            // with a clear error that should explain what is not correct in the Form
-            // TODO what we really want is to display again the same template, with an Invalid Form.
-            // It's not supported yet
-            // To do so we need to create a Form<TimeEntry> and send it to the front view.
+            // with the Form and a list of errors.
+            // In play2 framework we have a Form / FormFactory
             String errorMsg = validTimeEntryOrError.getLeft();
             logger.warn("Unable to persist a TimeEntry. Reason : " + errorMsg);
-            return Response.status(400, errorMsg).build();
+            Object htmlContent=newTimeEntry.data("formErrors", new FormErrors(errorMsg));
+            return Response.status(400, errorMsg).entity(htmlContent).build();
         } else {
             TimeEntry newTimeEntry = validTimeEntryOrError.get();
             timeEntryService.persist(newTimeEntry);

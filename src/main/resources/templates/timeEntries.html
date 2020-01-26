@@ -3,14 +3,14 @@
     {#title}All TimeEntries{/title}
 
     {#body}
-        {#if timeEntries.size == 0}
-            There is no time entry yet.
-        {/if}
         <div class="row">
             <div class="col-xs-12 col-lg-3 col-md-4">
-                <a href="/times/new" class="btn btn-primary"><ion-icon name="calendar"></ion-icon> Create a new time entry</a>
+                <a href="/times/new" class="btn btn-primary"><i class="icon ion-md-calendar"></i> Create a new time entry</a>
             </div>
             <div class="col-xs-12 col-lg-9 col-md-8">
+                {#if timeEntries.size == 0}
+                    There is no time entry in the database.
+                {/if}
                 <table class="table table-condensend">
                     <thead>
                     <tr>
@@ -27,7 +27,7 @@
                             <td>{entry.durationAsString ?: '-'}</td>
                             <td>{entry.created}</td>
                             <td>
-                                <a href="/times/{entry.id}" class="btn btn-primary"><ion-icon name="eye"></ion-icon> details</a>
+                                <a href="/times/{entry.id}" class="btn btn-primary"><i class="icon ion-md-eye"></i> details</a>
                             </td>
                         </tr>
                     {/for}

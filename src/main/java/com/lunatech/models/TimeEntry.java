@@ -9,6 +9,7 @@ import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
+import javax.ws.rs.FormParam;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.Date;

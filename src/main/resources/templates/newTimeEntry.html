@@ -1,0 +1,57 @@
+{@com.lunatech.models.TimeEntry timeEntry}
+{#include base.html}
+{#title}New Time Entry{/title}
+
+{#body}
+
+<div class="col-6">
+    <div class="card">
+        <div class="card-header">
+            <h2>Create a new time entry</h2>
+        </div>
+        <div class="card-body">
+            <form action="/times/new" method="POST" class="form">
+                <div class="form-group">
+                    <label for="description">Task description :</label>
+                    <input name="description" type="text" class="form-control" id="description" aria-describedby="emailHelp" placeholder="Enter Task description">
+                    <small id="emailHelp" class="form-text text-muted">Required. Be as descriptive as possible. Explain what you worked on today.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="author">Your email address :</label>
+                    <input name="author" type="email" class="form-control" id="author" aria-describedby="authorHelp" placeholder="">
+                    <small id="authorHelp" class="form-text text-muted">Required. Enter your email address.</small>
+                </div>
+
+              <div class="form-group">
+                <label for="durationSelect">Select duration for this task</label>
+                <select class="form-control" id="durationSelect" name="duration">
+                  <option value="PT30M">30mn</option>
+                  <option value="PT1H">1h</option>
+                  <option value="PT1H30M">1h 30mn</option>
+                  <option value="PT2H">2h</option>
+                  <option value="PT2H30M">2h 30mn</option>
+                  <option value="PT3H">3h</option>
+                  <option value="PT3H30M">3h 30mn</option>
+                  <option value="PT4H">4h</option>
+                  <option value="PT4H30M">4h 30mn</option>
+                  <option value="PT5H">5h</option>
+                  <option value="PT5H30M">5h 30mn</option>
+                  <option value="PT6H">6h</option>
+                  <option value="PT6H30M">6h 30mn</option>
+                  <option value="PT7H">7h</option>
+                  <option value="PT7H30M">7h 30mn</option>
+                  <option value="PT8H">8h</option>
+                </select>
+              </div>
+
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="col-12">
+    <a href="/times">&lt;&lt; Back to the list</a>
+</div>
+{/body}
+{/include}

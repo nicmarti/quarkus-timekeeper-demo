@@ -40,4 +40,18 @@ public class TimeEntry extends PanacheEntity {
 
     public TimeEntry() {
     }
+
+    public String durationAsString(){
+        if(this.duration==null){
+            return "-";
+        }else{
+            long s = duration.getSeconds();
+            if(s == 0){
+                return "0";
+            }else {
+                return String.format("%d:%02d:%02d", s / 3600, (s % 3600) / 60, (s % 60));
+            }
+        }
+
+    }
 }

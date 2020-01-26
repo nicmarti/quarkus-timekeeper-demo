@@ -5,8 +5,6 @@ import io.vavr.control.Either;
 import javax.ws.rs.FormParam;
 import java.time.Duration;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 
 public class TimeEntryDTO {
 

@@ -60,3 +60,16 @@ List of documentations you should read :
 
 - [Qute template engine](https://quarkus.io/guides/qute) used to build HTML page with templating
 - [RESTEasy documentation](https://docs.jboss.org/resteasy/docs/4.4.2.Final/userguide/html_single/index.html#Using_Path)
+
+
+## Resources
+
+We use Ionic for icons. See [the full documentation](https://ionicons.com/usage)
+List of icons : [https://ionicons.com/](https://ionicons.com/)
+
+# Tips
+
+If you want to add a new Quarkus extension : 
+
+> ./mvnw quarkus:add-extension -Dextensions="openapi"
+

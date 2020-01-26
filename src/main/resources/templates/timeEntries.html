@@ -6,14 +6,36 @@
         {#if timeEntries.size == 0}
             There is no time entry yet.
         {/if}
-    <ul>
-        {#for entry in timeEntries}
-            <li>{count} - {entry.description ?: 'No description'} <a href="/times/{entry.id}">see details</a>
-            <p>created by {entry.author}</p>
-            </li>
-        {/for}
-    </ul>
+        <div class="row">
+            <div class="col-xs-12 col-lg-3 col-md-4">
+                <a href="/times/new" class="btn btn-primary"><ion-icon name="calendar"></ion-icon> Create a new time entry</a>
+            </div>
+            <div class="col-xs-12 col-lg-9 col-md-8">
+                <table class="table table-condensend">
+                    <thead>
+                    <tr>
+                        <th>Description</th>
+                        <th>Duration</th>
+                        <th>Created on</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {#for entry in timeEntries}
+                        <tr>
+                            <td>{entry.description ?: 'No description'}</td>
+                            <td>{entry.durationAsString ?: '-'}</td>
+                            <td>{entry.created}</td>
+                            <td>
+                                <a href="/times/{entry.id}" class="btn btn-primary"><ion-icon name="eye"></ion-icon> details</a>
+                            </td>
+                        </tr>
+                    {/for}
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-    <a href="/times/new" class="btn btn-primary">Create a new time entry</a>
+
     {/body}
 {/include}

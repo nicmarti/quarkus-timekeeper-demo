@@ -1,5 +1,6 @@
 package com.lunatech.models;
 
+import com.lunatech.forms.FormFieldWithError;
 import io.vavr.control.Either;
 
 import javax.ws.rs.FormParam;
@@ -27,12 +28,12 @@ public class TimeEntryDTO {
     }
 
  // See https://www.baeldung.com/vavr-either
-    public Either<String, TimeEntry> toValidTimeEntry() {
+    public Either<FormFieldWithError, TimeEntry> toValidTimeEntry() {
         if (description == null || description.isEmpty()) {
-            return Either.left("TimeEntry description cannot be empty");
+            return Either.left(new FormFieldWithError("description","TimeEntry description cannot be empty"));
         }
         if (author == null || author.isEmpty()) {
-            return Either.left("Author is required");
+            return Either.left(new FormFieldWithError("author","Author is required"));
         }
 
         TimeEntry timeEntry = new TimeEntry();

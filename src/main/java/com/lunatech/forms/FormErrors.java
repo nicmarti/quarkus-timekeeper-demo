@@ -14,13 +14,13 @@ import io.quarkus.qute.RawString;
  * @author Nicolas Martignole
  */
 public class FormErrors {
-    private final String reason;
+    private final FormFieldWithError reason;
 
-    public FormErrors(String reason){
+    public FormErrors(FormFieldWithError reason){
         this.reason = reason;
     }
 
-    public String getReason() {
+    public FormFieldWithError getReason() {
         return reason;
     }
 
@@ -46,7 +46,7 @@ public class FormErrors {
      */
     public io.quarkus.qute.RawString getRenderIfErrors() {
         if(reason!=null){
-            String r = "<div class=\"alert alert-danger\">" + reason + "</div>";
+            String r = "<div class=\"alert alert-danger\">" + reason.getErrorMessage() + "</div>";
             return new RawString(r);
         }else{
             return new RawString("");

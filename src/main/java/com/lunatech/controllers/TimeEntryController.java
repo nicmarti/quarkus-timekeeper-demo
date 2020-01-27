@@ -1,7 +1,7 @@
 package com.lunatech.controllers;
 
 import com.lunatech.forms.FormErrors;
-import com.lunatech.forms.FormFactory;
+import com.lunatech.forms.FormFieldWithError;
 import com.lunatech.models.TimeEntry;
 import com.lunatech.models.TimeEntryDTO;
 import com.lunatech.services.TimeEntryService;
@@ -72,15 +72,15 @@ public class TimeEntryController {
     @Consumes(APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_HTML)
     public Response save(@Form TimeEntryDTO timeEntryDTO) {
-        Either<String, TimeEntry> validTimeEntryOrError = timeEntryDTO.toValidTimeEntry();
+        Either<FormFieldWithError, TimeEntry> validTimeEntryOrError = timeEntryDTO.toValidTimeEntry();
         if (validTimeEntryOrError.isLeft()) {
             // A best practice is not to throw a WebApplicationException here, but to return a 400 Bad Request
             // with the Form and a list of errors.
             // In play2 framework we have a Form / FormFactory
-            String errorMsg = validTimeEntryOrError.getLeft();
-            logger.warn("Unable to persist a TimeEntry. Reason : " + errorMsg);
-            Object htmlContent=newTimeEntry.data("formErrors", new FormErrors(errorMsg));
-            return Response.status(400, errorMsg).entity(htmlContent).build();
+            FormFieldWithError error = validTimeEntryOrError.getLeft();
+            logger.warn("Unable to persist a TimeEntry. Reason : " + error.getErrorMessage());
+            Object htmlContent=newTimeEntry.data("formErrors", new FormErrors(error));
+            return Response.status(400, error.getErrorMessage()).entity(htmlContent).build();
         } else {
             TimeEntry newTimeEntry = validTimeEntryOrError.get();
             timeEntryService.persist(newTimeEntry);

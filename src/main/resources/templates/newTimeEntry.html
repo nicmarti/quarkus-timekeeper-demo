@@ -1,4 +1,3 @@
-{@com.lunatech.models.forms.Form<TimeEntry> formTimeEntry}
 {@com.lunatech.forms.FormErrors formErrors}
 {#include base.html}
 {#title}New Time Entry{/title}
@@ -12,7 +11,7 @@
         </div>
         <div class="card-body">
             {! no router so we hard-code the URL... !}
-            <form action="/times/new" method="POST" class="form">
+            <form id="zeForm" action="/times/new" method="POST" class="form">
 
                 {! There is no CSRF protection here !}
 
@@ -21,15 +20,27 @@
                 {formErrors.renderIfErrors ?: ''}
 
                 <div class="form-group">
+                    {#if formErrors.reason.fieldWithError == "description"}
+                    <label for="descriptionWithErrors" class="text-danger"><i class="icon ion-md-clipboard"></i> Task description :</label>
+                    <input name="description" type="text" class="form-control is-invalid" id="descriptionWithErrors" aria-describedby=descHelp" placeholder="Enter Task description">
+                    <small id="descHelp" class="form-text text-muted">Required. Be as descriptive as possible. Explain what you worked on today.</small>
+                    {#else}
                     <label for="description"><i class="icon ion-md-clipboard"></i> Task description :</label>
-                    <input name="description" type="text" class="form-control" id="description" aria-describedby="emailHelp" placeholder="Enter Task description">
+                    <input name="description" type="text" class="form-control error" id="description" aria-describedby="emailHelp" placeholder="Enter Task description">
                     <small id="emailHelp" class="form-text text-muted">Required. Be as descriptive as possible. Explain what you worked on today.</small>
+                    {/if}
                 </div>
 
                 <div class="form-group">
+                    {#if formErrors.reason.fieldWithError == "description"}
+                    <label for="author2" class="text-danger"><i class="icon ion-md-mail"></i> Your email address :</label>
+                    <input name="author" type="email" class="form-control is-invalid" id="author2" aria-describedby="author2Help" placeholder="">
+                    <small id="author2Help" class="form-text text-muted">Required. Enter your email address.</small>
+                    {#else}
                     <label for="author"><i class="icon ion-md-mail"></i> Your email address :</label>
                     <input name="author" type="email" class="form-control" id="author" aria-describedby="authorHelp" placeholder="">
                     <small id="authorHelp" class="form-text text-muted">Required. Enter your email address.</small>
+                    {/if}
                 </div>
 
               <div class="form-group">

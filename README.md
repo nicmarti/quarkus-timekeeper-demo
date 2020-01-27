@@ -21,7 +21,7 @@ First we will need a PostgreSQL database; you can launch one easily if you have 
 
 then
 
->  docker run --ulimit memlock=-1:-1 -it --rm=true --memory-swappiness=0 --name timekeeper-db -e POSTGRES_USER=quarkus_test -e POSTGRES_PASSWORD=quarkus_test -e POSTGRES_DB=timekeeper -p 192.168.99.100:5434:5432 postgres:10.5
+>  docker run --ulimit memlock=-1:-1 -it --rm=true --memory-swappiness=0 --name timekeeper-db -e POSTGRES_USER=quarkus_test -e POSTGRES_PASSWORD=quarkus_test -e POSTGRES_DB=timekeeper -p 5434:5432 postgres:10.5
 
 Alternatively you can setup a PostgreSQL instance in any another way.
 

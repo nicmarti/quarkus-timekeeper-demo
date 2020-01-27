@@ -51,3 +51,6 @@ release.properties
 
 lsp/
 
+
+.qovery
+local_configuration.json

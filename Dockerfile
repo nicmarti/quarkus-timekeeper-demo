@@ -15,7 +15,8 @@
 #
 ###
 FROM fabric8/java-alpine-openjdk8-jre:1.6.5
-ENV JAVA_OPTIONS="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
+# jdbc:postgresql://my-postgresql-6132005/timekeeper
+ENV JAVA_OPTIONS="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager -Dquarkus.datasource.url=jdbc:postgresql://${QOVERY_DATABASE_MY_POSTGRESQL_6132005_URI}"
 ENV AB_ENABLED=jmx_exporter
 
 # Be prepared for running in OpenShift too

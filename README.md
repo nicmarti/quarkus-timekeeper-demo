@@ -17,11 +17,14 @@ A full documentation about this Lunatech project is avalaible on [Lunatech Confl
 
 First we will need a PostgreSQL database; you can launch one easily if you have Docker installed:
 
-> eval $(docker-machine env default)
+```
+eval $(docker-machine env default)
+```
 
 then
-
->  docker run --ulimit memlock=-1:-1 -it --rm=true --memory-swappiness=0 --name timekeeper-db -e POSTGRES_USER=quarkus_test -e POSTGRES_PASSWORD=quarkus_test -e POSTGRES_DB=timekeeper -p 5434:5432 postgres:10.5
+```
+docker run --ulimit memlock=-1:-1 -it --rm=true --memory-swappiness=0 --name timekeeper-db -e POSTGRES_USER=quarkus_test -e POSTGRES_PASSWORD=quarkus_test -e POSTGRES_DB=timekeeper -p 5434:5432 postgres:10.5
+```
 
 Alternatively you can setup a PostgreSQL instance in any another way.
 
@@ -45,7 +48,7 @@ The application is now runnable using `java -jar target/timekeeper-1.0.0-SNAPSHO
 
 ## Creating a native executable
 
-You can create a native executable using: `./mvnw package -Pnative`.
+If GraalVM is configured on your server, you can create a native executable using: `./mvnw package -Pnative`.
 
 Or you can use Docker to build the native executable using: `./mvnw package -Pnative -Dquarkus.native.container-build=true`.
 
@@ -72,4 +75,38 @@ List of icons : [https://ionicons.com/](https://ionicons.com/)
 If you want to add a new Quarkus extension : 
 
 > ./mvnw quarkus:add-extension -Dextensions="openapi"
+
+
+# GraalVM on Mac OS
+
+- Go to https://github.com/oracle/graal/releases 
+- Download version 19.2 [here](https://github.com/oracle/graal/releases)
+- unzip
+- move the `graalvm-ce-19.2.1` folder to ` /Library/Java/JavaVirtualMachines`
+- use `/usr/libexec/java_home -V` to show a list of JVM
+- use `/usr/libexec/java_home -v 1.8.0_231` to set the JVM to GraalVM
+
+You can also use `jenv` utility.
+> jenv add /Library/Java/JavaVirtualMachines/graalvm-ce-19.2.1/Contents/Home
+
+Check that Graal VM is configured 
+
+```
+> nicolas:quarkus-timekeeper-demo nmartignole$ jenv local 1.8.0.232
+> nicolas:quarkus-timekeeper-demo nmartignole$ jenv local
+1.8.0.232
+> nicolas:quarkus-timekeeper-demo nmartignole$ java -version
+openjdk version "1.8.0_232"
+OpenJDK Runtime Environment (build 1.8.0_232-20191009173705.graal.jdk8u-src-tar-gz-b07)
+OpenJDK 64-Bit GraalVM CE 19.2.1 (build 25.232-b07-jvmci-19.2-b03, mixed mode)
+
+```
+
+You should then be able to install 'native-image'
+
+`gu install native-image`
+
+Once i
+
+See also this blog article [by Software Mill](https://blog.softwaremill.com/graalvm-installation-and-setup-on-macos-294dd1d23ca2)
 

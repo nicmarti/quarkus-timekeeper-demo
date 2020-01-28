@@ -1,0 +1,218 @@
+####
+# This is a Dockerfile to deploy this application to Clever-cloud
+# Execute this file with
+# docker build -t quarkus/timekeeper-jvm -f Dockerfile.clever .
+#####################
+
+## Stage 1 : build with maven builder image with native capabilities
+# see https://github.com/quarkusio/quarkus-images
+# see also https://quay.io/repository/quarkus/centos-quarkus-maven?tab=tags
+# Thanks to Loïc Mathieu from Zenika https://blog.zenika.com/2019/04/23/zoom-sur-quarkus/
+# I updated its multi-stage build
+FROM quay.io/quarkus/centos-quarkus-maven:19.2.1 AS build
+COPY src /project
+COPY pom.xml /project
+RUN mvn -e -f /project/pom.xml -DskipTests -Pnative clean package
+
+# Right now I cannot build the native image, I get an error with Quarkus 1.1.1 Final - 28/01/2020
+
+# [timekeeper-1.0.0-SNAPSHOT-runner:182]    classlist:  21,126.12 ms
+# [timekeeper-1.0.0-SNAPSHOT-runner:182]        (cap):   1,189.61 ms
+# [timekeeper-1.0.0-SNAPSHOT-runner:182]        setup:   3,339.35 ms
+# 14:09:23,444 INFO  [org.hib.val.int.uti.Version] HV000001: Hibernate Validator 6.1.0.Final
+# 14:09:24,602 INFO  [org.jbo.threads] JBoss Threads version 3.0.0.Final
+# 14:09:44,439 INFO  [org.hib.Version] HHH000412: Hibernate Core {5.4.10.Final}
+# [timekeeper-1.0.0-SNAPSHOT-runner:182]   (typeflow):  16,782.42 ms
+# [timekeeper-1.0.0-SNAPSHOT-runner:182]    (objects):   9,647.59 ms
+# [timekeeper-1.0.0-SNAPSHOT-runner:182]   (features):     698.39 ms
+# [timekeeper-1.0.0-SNAPSHOT-runner:182]     analysis:  28,328.76 ms
+# [timekeeper-1.0.0-SNAPSHOT-runner:182]     (clinit):     860.21 ms
+# [timekeeper-1.0.0-SNAPSHOT-runner:182]     universe:   3,025.66 ms
+# [timekeeper-1.0.0-SNAPSHOT-runner:182]      (parse):  29,774.21 ms
+# [timekeeper-1.0.0-SNAPSHOT-runner:182]     (inline):  49,221.90 ms
+# [timekeeper-1.0.0-SNAPSHOT-runner:182]    (compile):  47,727.06 ms
+# [timekeeper-1.0.0-SNAPSHOT-runner:182]      compile: 140,745.04 ms
+# [timekeeper-1.0.0-SNAPSHOT-runner:182]        image:  51,715.07 ms
+# Error: Image build request failed with exit status 137
+# [INFO] ------------------------------------------------------------------------
+# [INFO] BUILD FAILURE
+# [INFO] ------------------------------------------------------------------------
+# [INFO] Total time:  05:13 min
+# [INFO] Finished at: 2020-01-28T14:23:50Z
+# [INFO] ------------------------------------------------------------------------
+# [ERROR] Failed to execute goal io.quarkus:quarkus-maven-plugin:1.1.1.Final:build (default) on project timekeeper: Failed to build a runnable JAR: Failed to augment application classes: Build failure: Build failed due to errors
+# [ERROR] 	[error]: Build step io.quarkus.deployment.pkg.steps.NativeImageBuildStep#build threw an exception: java.lang.RuntimeException: Failed to build native image
+# [ERROR] 	at io.quarkus.deployment.pkg.steps.NativeImageBuildStep.build(NativeImageBuildStep.java:325)
+# [ERROR] 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+# [ERROR] 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+# [ERROR] 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+# [ERROR] 	at java.lang.reflect.Method.invoke(Method.java:498)
+# [ERROR] 	at io.quarkus.deployment.ExtensionLoader$2.execute(ExtensionLoader.java:915)
+# [ERROR] 	at io.quarkus.builder.BuildContext.run(BuildContext.java:415)
+# [ERROR] 	at org.jboss.threads.ContextClassLoaderSavingRunnable.run(ContextClassLoaderSavingRunnable.java:35)
+# [ERROR] 	at org.jboss.threads.EnhancedQueueExecutor.safeRun(EnhancedQueueExecutor.java:2011)
+# [ERROR] 	at org.jboss.threads.EnhancedQueueExecutor$ThreadBody.doRunTask(EnhancedQueueExecutor.java:1535)
+# [ERROR] 	at org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1426)
+# [ERROR] 	at java.lang.Thread.run(Thread.java:748)
+# [ERROR] 	at org.jboss.threads.JBossThread.run(JBossThread.java:479)
+# [ERROR] Caused by: java.lang.RuntimeException: Image generation failed. Exit code: 1
+# [ERROR] 	at io.quarkus.deployment.pkg.steps.NativeImageBuildStep.build(NativeImageBuildStep.java:314)
+# [ERROR] 	... 12 more
+# [ERROR] -> [Help 1]
+# org.apache.maven.lifecycle.LifecycleExecutionException: Failed to execute goal io.quarkus:quarkus-maven-plugin:1.1.1.Final:build (default) on project timekeeper: Failed to build a runnable JAR
+#     at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:215)
+#     at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:156)
+#     at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:148)
+#     at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject (LifecycleModuleBuilder.java:117)
+#     at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject (LifecycleModuleBuilder.java:81)
+#     at org.apache.maven.lifecycle.internal.builder.singlethreaded.SingleThreadedBuilder.build (SingleThreadedBuilder.java:56)
+#     at org.apache.maven.lifecycle.internal.LifecycleStarter.execute (LifecycleStarter.java:128)
+#     at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:305)
+#     at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:192)
+#     at org.apache.maven.DefaultMaven.execute (DefaultMaven.java:105)
+#     at org.apache.maven.cli.MavenCli.execute (MavenCli.java:956)
+#     at org.apache.maven.cli.MavenCli.doMain (MavenCli.java:288)
+#     at org.apache.maven.cli.MavenCli.main (MavenCli.java:192)
+#     at sun.reflect.NativeMethodAccessorImpl.invoke0 (Native Method)
+#     at sun.reflect.NativeMethodAccessorImpl.invoke (NativeMethodAccessorImpl.java:62)
+#     at sun.reflect.DelegatingMethodAccessorImpl.invoke (DelegatingMethodAccessorImpl.java:43)
+#     at java.lang.reflect.Method.invoke (Method.java:498)
+#     at org.codehaus.plexus.classworlds.launcher.Launcher.launchEnhanced (Launcher.java:282)
+#     at org.codehaus.plexus.classworlds.launcher.Launcher.launch (Launcher.java:225)
+#     at org.codehaus.plexus.classworlds.launcher.Launcher.mainWithExitCode (Launcher.java:406)
+#     at org.codehaus.plexus.classworlds.launcher.Launcher.main (Launcher.java:347)
+# Caused by: org.apache.maven.plugin.MojoExecutionException: Failed to build a runnable JAR
+#     at io.quarkus.maven.BuildMojo.execute (BuildMojo.java:194)
+#     at org.apache.maven.plugin.DefaultBuildPluginManager.executeMojo (DefaultBuildPluginManager.java:137)
+#     at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:210)
+#     at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:156)
+#     at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:148)
+#     at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject (LifecycleModuleBuilder.java:117)
+#     at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject (LifecycleModuleBuilder.java:81)
+#     at org.apache.maven.lifecycle.internal.builder.singlethreaded.SingleThreadedBuilder.build (SingleThreadedBuilder.java:56)
+#     at org.apache.maven.lifecycle.internal.LifecycleStarter.execute (LifecycleStarter.java:128)
+#     at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:305)
+#     at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:192)
+#     at org.apache.maven.DefaultMaven.execute (DefaultMaven.java:105)
+#     at org.apache.maven.cli.MavenCli.execute (MavenCli.java:956)
+#     at org.apache.maven.cli.MavenCli.doMain (MavenCli.java:288)
+#     at org.apache.maven.cli.MavenCli.main (MavenCli.java:192)
+#     at sun.reflect.NativeMethodAccessorImpl.invoke0 (Native Method)
+#     at sun.reflect.NativeMethodAccessorImpl.invoke (NativeMethodAccessorImpl.java:62)
+#     at sun.reflect.DelegatingMethodAccessorImpl.invoke (DelegatingMethodAccessorImpl.java:43)
+#     at java.lang.reflect.Method.invoke (Method.java:498)
+#     at org.codehaus.plexus.classworlds.launcher.Launcher.launchEnhanced (Launcher.java:282)
+#     at org.codehaus.plexus.classworlds.launcher.Launcher.launch (Launcher.java:225)
+#     at org.codehaus.plexus.classworlds.launcher.Launcher.mainWithExitCode (Launcher.java:406)
+#     at org.codehaus.plexus.classworlds.launcher.Launcher.main (Launcher.java:347)
+# Caused by: io.quarkus.creator.AppCreatorException: Failed to augment application classes
+#     at io.quarkus.creator.phase.augment.AugmentTask.run (AugmentTask.java:188)
+#     at io.quarkus.creator.phase.augment.AugmentTask.run (AugmentTask.java:53)
+#     at io.quarkus.creator.CuratedApplicationCreator.runTask (CuratedApplicationCreator.java:139)
+#     at io.quarkus.maven.BuildMojo.execute (BuildMojo.java:178)
+#     at org.apache.maven.plugin.DefaultBuildPluginManager.executeMojo (DefaultBuildPluginManager.java:137)
+#     at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:210)
+#     at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:156)
+#     at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:148)
+#     at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject (LifecycleModuleBuilder.java:117)
+#     at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject (LifecycleModuleBuilder.java:81)
+#     at org.apache.maven.lifecycle.internal.builder.singlethreaded.SingleThreadedBuilder.build (SingleThreadedBuilder.java:56)
+#     at org.apache.maven.lifecycle.internal.LifecycleStarter.execute (LifecycleStarter.java:128)
+#     at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:305)
+#     at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:192)
+#     at org.apache.maven.DefaultMaven.execute (DefaultMaven.java:105)
+#     at org.apache.maven.cli.MavenCli.execute (MavenCli.java:956)
+#     at org.apache.maven.cli.MavenCli.doMain (MavenCli.java:288)
+#     at org.apache.maven.cli.MavenCli.main (MavenCli.java:192)
+#     at sun.reflect.NativeMethodAccessorImpl.invoke0 (Native Method)
+#     at sun.reflect.NativeMethodAccessorImpl.invoke (NativeMethodAccessorImpl.java:62)
+#     at sun.reflect.DelegatingMethodAccessorImpl.invoke (DelegatingMethodAccessorImpl.java:43)
+#     at java.lang.reflect.Method.invoke (Method.java:498)
+#     at org.codehaus.plexus.classworlds.launcher.Launcher.launchEnhanced (Launcher.java:282)
+#     at org.codehaus.plexus.classworlds.launcher.Launcher.launch (Launcher.java:225)
+#     at org.codehaus.plexus.classworlds.launcher.Launcher.mainWithExitCode (Launcher.java:406)
+#     at org.codehaus.plexus.classworlds.launcher.Launcher.main (Launcher.java:347)
+# Caused by: io.quarkus.builder.BuildException: Build failure: Build failed due to errors
+# 	[error]: Build step io.quarkus.deployment.pkg.steps.NativeImageBuildStep#build threw an exception: java.lang.RuntimeException: Failed to build native image
+# 	at io.quarkus.deployment.pkg.steps.NativeImageBuildStep.build(NativeImageBuildStep.java:325)
+# 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+# 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+# 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+# 	at java.lang.reflect.Method.invoke(Method.java:498)
+# 	at io.quarkus.deployment.ExtensionLoader$2.execute(ExtensionLoader.java:915)
+# 	at io.quarkus.builder.BuildContext.run(BuildContext.java:415)
+# 	at org.jboss.threads.ContextClassLoaderSavingRunnable.run(ContextClassLoaderSavingRunnable.java:35)
+# 	at org.jboss.threads.EnhancedQueueExecutor.safeRun(EnhancedQueueExecutor.java:2011)
+# 	at org.jboss.threads.EnhancedQueueExecutor$ThreadBody.doRunTask(EnhancedQueueExecutor.java:1535)
+# 	at org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1426)
+# 	at java.lang.Thread.run(Thread.java:748)
+# 	at org.jboss.threads.JBossThread.run(JBossThread.java:479)
+# Caused by: java.lang.RuntimeException: Image generation failed. Exit code: 1
+# 	at io.quarkus.deployment.pkg.steps.NativeImageBuildStep.build(NativeImageBuildStep.java:314)
+# 	... 12 more
+#
+#     at io.quarkus.builder.Execution.run (Execution.java:108)
+#     at io.quarkus.builder.BuildExecutionBuilder.execute (BuildExecutionBuilder.java:121)
+#     at io.quarkus.deployment.QuarkusAugmentor.run (QuarkusAugmentor.java:128)
+#     at io.quarkus.creator.phase.augment.AugmentTask.run (AugmentTask.java:179)
+#     at io.quarkus.creator.phase.augment.AugmentTask.run (AugmentTask.java:53)
+#     at io.quarkus.creator.CuratedApplicationCreator.runTask (CuratedApplicationCreator.java:139)
+#     at io.quarkus.maven.BuildMojo.execute (BuildMojo.java:178)
+#     at org.apache.maven.plugin.DefaultBuildPluginManager.executeMojo (DefaultBuildPluginManager.java:137)
+#     at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:210)
+#     at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:156)
+#     at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:148)
+#     at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject (LifecycleModuleBuilder.java:117)
+#     at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject (LifecycleModuleBuilder.java:81)
+#     at org.apache.maven.lifecycle.internal.builder.singlethreaded.SingleThreadedBuilder.build (SingleThreadedBuilder.java:56)
+#     at org.apache.maven.lifecycle.internal.LifecycleStarter.execute (LifecycleStarter.java:128)
+#     at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:305)
+#     at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:192)
+#     at org.apache.maven.DefaultMaven.execute (DefaultMaven.java:105)
+#     at org.apache.maven.cli.MavenCli.execute (MavenCli.java:956)
+#     at org.apache.maven.cli.MavenCli.doMain (MavenCli.java:288)
+#     at org.apache.maven.cli.MavenCli.main (MavenCli.java:192)
+#     at sun.reflect.NativeMethodAccessorImpl.invoke0 (Native Method)
+#     at sun.reflect.NativeMethodAccessorImpl.invoke (NativeMethodAccessorImpl.java:62)
+#     at sun.reflect.DelegatingMethodAccessorImpl.invoke (DelegatingMethodAccessorImpl.java:43)
+#     at java.lang.reflect.Method.invoke (Method.java:498)
+#     at org.codehaus.plexus.classworlds.launcher.Launcher.launchEnhanced (Launcher.java:282)
+#     at org.codehaus.plexus.classworlds.launcher.Launcher.launch (Launcher.java:225)
+#     at org.codehaus.plexus.classworlds.launcher.Launcher.mainWithExitCode (Launcher.java:406)
+#     at org.codehaus.plexus.classworlds.launcher.Launcher.main (Launcher.java:347)
+# Caused by: java.lang.RuntimeException: Failed to build native image
+#     at io.quarkus.deployment.pkg.steps.NativeImageBuildStep.build (NativeImageBuildStep.java:325)
+#     at sun.reflect.NativeMethodAccessorImpl.invoke0 (Native Method)
+#     at sun.reflect.NativeMethodAccessorImpl.invoke (NativeMethodAccessorImpl.java:62)
+#     at sun.reflect.DelegatingMethodAccessorImpl.invoke (DelegatingMethodAccessorImpl.java:43)
+#     at java.lang.reflect.Method.invoke (Method.java:498)
+#     at io.quarkus.deployment.ExtensionLoader$2.execute (ExtensionLoader.java:915)
+#     at io.quarkus.builder.BuildContext.run (BuildContext.java:415)
+#     at org.jboss.threads.ContextClassLoaderSavingRunnable.run (ContextClassLoaderSavingRunnable.java:35)
+#     at org.jboss.threads.EnhancedQueueExecutor.safeRun (EnhancedQueueExecutor.java:2011)
+#     at org.jboss.threads.EnhancedQueueExecutor$ThreadBody.doRunTask (EnhancedQueueExecutor.java:1535)
+#     at org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run (EnhancedQueueExecutor.java:1426)
+#     at java.lang.Thread.run (Thread.java:748)
+#     at org.jboss.threads.JBossThread.run (JBossThread.java:479)
+# Caused by: java.lang.RuntimeException: Image generation failed. Exit code: 1
+#     at io.quarkus.deployment.pkg.steps.NativeImageBuildStep.build (NativeImageBuildStep.java:314)
+#    at sun.reflect.NativeMethodAccessorImpl.invoke0 (Native Method)
+#    at sun.reflect.NativeMethodAccessorImpl.invoke (NativeMethodAccessorImpl.java:62)
+#    at sun.reflect.DelegatingMethodAccessorImpl.invoke (DelegatingMethodAccessorImpl.java:43)
+#    at java.lang.reflect.Method.invoke (Method.java:498)
+#    at io.quarkus.deployment.ExtensionLoader$2.execute (ExtensionLoader.java:915)
+#    at io.quarkus.builder.BuildContext.run (BuildContext.java:415)
+#    at org.jboss.threads.ContextClassLoaderSavingRunnable.run (ContextClassLoaderSavingRunnable.java:35)
+#    at org.jboss.threads.EnhancedQueueExecutor.safeRun (EnhancedQueueExecutor.java:2011)
+#    at org.jboss.threads.EnhancedQueueExecutor$ThreadBody.doRunTask (EnhancedQueueExecutor.java:1535)
+#    at org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run (EnhancedQueueExecutor.java:1426)
+#    at java.lang.Thread.run (Thread.java:748)
+#    at org.jboss.threads.JBossThread.run (JBossThread.java:479)
+
+
+## Stage 2 : create the docker final image form a distroless image !
+FROM cescoffier/native-base
+# we copy from the previous build the artifacts
+COPY --from=build /project/target/*-runner /application
+EXPOSE 8080
+ENTRYPOINT ["./application", "-Dquarkus.http.host=0.0.0.0" "-Dquarkus.datasource.url=${POSTGRESQL_ADDON_URI}"]

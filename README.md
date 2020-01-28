@@ -41,10 +41,13 @@ You can run your application in dev mode that enables live coding using:
 ## Packaging and running the application
 
 The application is packageable using `./mvnw package`.
-It produces the executable `timekeeper-1.0.0-SNAPSHOT-runner.jar` file in `/target` directory.
+It produces the executable `timekeeper-1.2.0-SNAPSHOT-runner.jar` file in `/target` directory.
 Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/lib` directory.
 
-The application is now runnable using `java -jar target/timekeeper-1.0.0-SNAPSHOT-runner.jar`.
+The application is now runnable using `java -jar target/timekeeper-1.2.0-SNAPSHOT-runner.jar`.
+
+Open a web browser and check that http://localhost:8080/ load the home page. 
+
 
 ## Creating a native executable
 
@@ -52,9 +55,29 @@ If GraalVM is configured on your server, you can create a native executable usin
 
 Or you can use Docker to build the native executable using: `./mvnw package -Pnative -Dquarkus.native.container-build=true`.
 
-You can then execute your binary: `./target/timekeeper-1.0.0-SNAPSHOT-runner`
+You can then execute your binary: `./target/timekeeper-1.2.0-SNAPSHOT-runner`
 
 If you want to learn more about building native executables, please consult https://quarkus.io/guides/building-native-image-guide .
+
+
+## Package to a native app
+
+First, check that you can build locally a native image 
+
+> mvn clean package -Pnative
+
+I created a multi-stage Docker file, for Qovery and Clever-cloud. Please note that a large amount of memory is required by Docker Machine if
+you try to build from a Mac. I configured my docker machine with 16GB and 8 CPU, the build with GraalVM and
+Quarkus takes 1mn14. 
+
+> docker build -t quarkus/timekeeper-jvm -f Dockerfile .
+
+## Start a Docker version of Timekeeper
+
+Once your Docker image has successfully built, you can launch your app and test locally. QOVERY_DATABASE_MY_POSTGRESQL_6132005_URI is also required.
+
+> docker run --ulimit memlock=-1:-1 -it --rm=true --memory-swappiness=0 --name timekeeper -e QOVERY_DATABASE_MY_POSTGRESQL_6132005_URI=jdbc:postgresql://localhost:5434/timekeeper?user=quarkus_test -p 8888:8080 quarkus/timekeeper-jvm:latest
+
 
 
 # Developement

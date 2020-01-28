@@ -1,34 +1,27 @@
 ####
-# This Dockerfile is used in order to build a container that runs the Quarkus application in JVM mode
+# This is a Dockerfile to deploy this application to Qovery https://www.qovery.com/
 #
-# Before building the docker image run:
+# Execute this file with
+# docker build -t quarkus/timekeeper-jvm -f Dockerfile .
 #
-# mvn package
-#
-# Then, build the image with:
-#
-# docker build -f src/main/docker/Dockerfile.jvm -t quarkus/timekeeper-jvm .
-#
-# Then run the container using:
-#
-# docker run -i --rm -p 8080:8080 quarkus/timekeeper-jvm
-#
-###
-FROM fabric8/java-alpine-openjdk8-jre:1.6.5
-ENV JAVA_OPTIONS="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager -Dquarkus.datasource.url=${POSTGRESQL_ADDON_URI}"
-ENV AB_ENABLED=jmx_exporter
+# Quarkus 1.2.0 final is required - It is normally set in pom.xml
+#########################################################################################################
 
-# Be prepared for running in OpenShift too
-RUN adduser -G root --no-create-home --disabled-password 1001 \
-  && chown -R 1001 /deployments \
-  && chmod -R "g+rwX" /deployments \
-  && chown -R 1001:root /deployments
+## Stage 1 : build with maven builder image with native capabilities
+# see https://github.com/quarkusio/quarkus-images
+# see also https://quay.io/repository/quarkus/centos-quarkus-maven?tab=tags
+# Thanks to Loïc Mathieu from Zenika https://blog.zenika.com/2019/04/23/zoom-sur-quarkus/
+# I updated its multi-stage build
+FROM quay.io/quarkus/centos-quarkus-maven:19.2.1 AS build
+COPY src /project
+COPY pom.xml /project
+# Please note that you need a large amount of memory here => check your Docker machine settings if you compile from Mac OS
+# If you get an exit error with 137 : OutOfMemory then change your docker machine settings from the desktop app
+RUN mvn -e -f /project/pom.xml -DskipTests -Pnative clean package
 
-COPY target/lib/* /deployments/lib/
-COPY target/*-runner.jar /deployments/app.jar
+## Stage 2 : create the docker final image form a distroless image !
+FROM cescoffier/native-base
+# we copy from the previous build the artifacts
+COPY --from=build /project/target/*-runner /application
 EXPOSE 8080
-
-# run with user 1001
-USER 1001
-
-ENTRYPOINT [ "/deployments/run-java.sh" ]
+ENTRYPOINT ["./application", "-Dquarkus.http.host=0.0.0.0" , "-Dquarkus.log.level=FINEST", "-Dquarkus.log.console.level=FINEST", "-Dquarkus.datasource.url=${QOVERY_DATABASE_MY_POSTGRESQL_6132005_URI}"]

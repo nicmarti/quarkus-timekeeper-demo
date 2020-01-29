@@ -62,6 +62,8 @@ If you want to learn more about building native executables, please consult http
 
 ## Package to a native app
 
+See [https://quarkus.io/guides/building-native-image](https://quarkus.io/guides/building-native-image)
+
 First, check that you can build locally a native image 
 
 > mvn clean package -Pnative

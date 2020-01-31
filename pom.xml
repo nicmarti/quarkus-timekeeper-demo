@@ -134,7 +134,7 @@
                     <name>native</name>
                 </property>
             </activation>
-
+            <skipTests>true</skipTests>
             <properties>
                 <quarkus.package.type>native</quarkus.package.type>
             </properties>

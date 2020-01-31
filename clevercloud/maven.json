@@ -1,5 +1,5 @@
   {
     "deploy": {
-      "goal": "-DskipTests -Pnative package"
+      "goal": "-DskipTests -Dtest.active=false package"
     }
   }

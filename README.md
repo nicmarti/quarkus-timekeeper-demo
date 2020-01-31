@@ -78,9 +78,9 @@ Quarkus takes 1mn14.
 
 Once your Docker image has successfully built, you can launch your app and test locally. QOVERY_DATABASE_MY_POSTGRESQL_6132005_URI is also required.
 
-> docker run --ulimit memlock=-1:-1 -it --rm=true --memory-swappiness=0 --name timekeeper -e QOVERY_DATABASE_MY_POSTGRESQL_6132005_URI=jdbc:postgresql://localhost:5434/timekeeper?user=quarkus_test -p 8888:8080 quarkus/timekeeper-jvm:latest
+> docker run --ulimit memlock=-1:-1 -it --rm=true --memory-swappiness=0 --name timekeeper -e QOVERY_DATABASE_MY_POSTGRESQL_6132005_URI="jdbc:postgresql://host.docker.internal:5434/timekeeper?user=quarkus_test&password=quarkus_test" -p 8888:8080 quarkus/timekeeper-jvm:latest 
 
-
+`host.docker.internal` is a special Docker DNS entry that is mapped to your localhost. See the [full documentation here](https://docs.docker.com/docker-for-mac/networking/#use-cases-and-workarounds)
 
 # Developement
 

@@ -1,13 +1,14 @@
 package com.lunatech.models;
 
-import com.lunatech.forms.FormFieldWithError;
+import com.lunatech.forms.FormFieldWithErrors;
+import com.lunatech.forms.Validatable;
 import io.vavr.control.Either;
 
 import javax.ws.rs.FormParam;
 import java.time.Duration;
 import java.time.LocalDate;
 
-public class TimeEntryDTO {
+public class TimeEntryDTO implements Validatable<TimeEntry> {
 
     @FormParam("description")
     public String description;
@@ -16,7 +17,7 @@ public class TimeEntryDTO {
     public String author;
 
     @FormParam("duration")
-    public String durationAsString ;
+    public String durationAsString;
 
     @Override
     public String toString() {
@@ -27,21 +28,24 @@ public class TimeEntryDTO {
                 '}';
     }
 
- // See https://www.baeldung.com/vavr-either
-    public Either<FormFieldWithError, TimeEntry> toValidTimeEntry() {
-        if (description == null || description.isEmpty()) {
-            return Either.left(new FormFieldWithError("description","TimeEntry description cannot be empty"));
-        }
-        if (author == null || author.isEmpty()) {
-            return Either.left(new FormFieldWithError("author","Author is required"));
-        }
+    @Override
+    public Either<FormFieldWithErrors, TimeEntry> valid() {
 
-        TimeEntry timeEntry = new TimeEntry();
-        timeEntry.description = this.description;
-        timeEntry.author = this.author;
-        timeEntry.entryDate = LocalDate.now(); // UTC ?
-        timeEntry.duration = Duration.parse(this.durationAsString);
-        return Either.right(timeEntry);
+        FormFieldWithErrors errors = FormFieldWithErrors
+                .prepareNew()
+                .nonEmpty("description", description)
+                .nonEmpty("author", author);
+
+        if (errors.hasErrors()) {
+            return Either.left(errors);
+        } else {
+            TimeEntry timeEntry = new TimeEntry();
+            timeEntry.description = this.description;
+            timeEntry.author = this.author;
+            timeEntry.entryDate = LocalDate.now(); // UTC ?
+            timeEntry.duration = Duration.parse(this.durationAsString);
+            return Either.right(timeEntry);
+        }
 
     }
 }

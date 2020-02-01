@@ -1,5 +1,6 @@
 package com.lunatech.models;
 
+import com.lunatech.forms.FormDTO;
 import com.lunatech.forms.FormFieldWithErrors;
 import com.lunatech.forms.Validatable;
 import io.vavr.control.Either;
@@ -7,8 +8,11 @@ import io.vavr.control.Either;
 import javax.ws.rs.FormParam;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
-public class TimeEntryDTO implements Validatable<TimeEntry> {
+public class TimeEntryDTO implements Validatable<TimeEntry>, FormDTO {
 
     @FormParam("description")
     public String description;
@@ -46,6 +50,15 @@ public class TimeEntryDTO implements Validatable<TimeEntry> {
             timeEntry.duration = Duration.parse(this.durationAsString);
             return Either.right(timeEntry);
         }
-
     }
+
+    public Map<String,String> getFieldValues(){
+        Map<String,String> mapOfCurrentFields = new HashMap<>(3);
+        mapOfCurrentFields.put("description", this.description);
+        mapOfCurrentFields.put("author", this.author);
+        mapOfCurrentFields.put("author", this.author);
+        mapOfCurrentFields.put("durationAsString", this.durationAsString);
+        return Collections.unmodifiableMap(mapOfCurrentFields);
+    }
+
 }

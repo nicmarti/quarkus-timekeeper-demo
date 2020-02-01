@@ -19,17 +19,26 @@ import java.util.stream.Collectors;
  */
 @TemplateExtension
 public class Form {
-    private final String actionURI ;
-    private final FormFieldWithErrors formFieldWithErrors;
+    private String actionURI;
+    private FormFieldWithErrors formFieldWithErrors;
+    private FieldMapper fieldMapper;
 
-    public Form(String actionURI) {
+    public Form(String actionURI,final FormDTO dto, FormFieldWithErrors formFieldWithErrors) {
         this.actionURI = actionURI;
-        this.formFieldWithErrors = new FormFieldWithErrors();
+        if(dto == null) {
+            this.fieldMapper = new FieldMapper();
+        }else{
+            this.fieldMapper = FieldMapper.parse(dto);
+        }
+        this.formFieldWithErrors = formFieldWithErrors;
     }
 
-    public Form(String actionURI,FormFieldWithErrors formFieldWithErrors) {
-        this.actionURI = actionURI;
-        this.formFieldWithErrors = formFieldWithErrors;
+    public Form(final String actionURI, final FormDTO dto) {
+        this(actionURI, dto, null);
+    }
+
+    public Form(final String actionURI) {
+        this(actionURI, null, null);
     }
 
     public String getActionURI() {
@@ -46,6 +55,7 @@ public class Form {
      * formErrors.reason
      * </div>
      * {/if}
+     *
      * <p>
      * But it will print "NOT_FOUND" in the HTML page
      * <p>
@@ -66,9 +76,25 @@ public class Form {
         }
     }
 
-    public boolean hasErrors(){
-        return formFieldWithErrors.hasErrors();
+    public boolean hasErrors() {
+        if (formFieldWithErrors != null) {
+            return formFieldWithErrors.hasErrors();
+        }
+        return false;
     }
 
+    public static io.quarkus.qute.RawString fieldValue(Form form, String fieldName){
+        String toReturn = form.fieldMapper.getValue(fieldName).orElse("?");
+        System.out.println("form debug " + fieldName + "= " + toReturn);
+        return form.fieldMapper.getValue(fieldName).map(v -> new RawString(v)).orElse(new RawString(""));
+    }
 
+    @Override
+    public String toString() {
+        return "Form{" +
+                "actionURI='" + actionURI + '\'' +
+                ", formFieldWithErrors=" + formFieldWithErrors +
+                ", fieldMapper=" + fieldMapper +
+                '}';
+    }
 }

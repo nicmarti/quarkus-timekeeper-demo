@@ -1,8 +1,7 @@
 # 1. Version quarkus for local dev
-#*
-#!target/*-runner
-#!target/*-runner.jar
-#!target/lib/*
+!target/*-runner
+!target/*-runner.jar
+!target/lib/*
 
 # 2. Version multi-stage - See README
 src/main/docker/*

@@ -54,3 +54,4 @@ lsp/
 
 local_configuration.json
 /.java-version
+/.clever.json

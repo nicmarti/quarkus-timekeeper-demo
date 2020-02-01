@@ -1,6 +1,7 @@
 # 1. Version quarkus for local dev
 # We cannot ignore the Dockerfile at the root of this hierarchy, as it's required for Qovery deployment
 # We just ignore some big files
+*
 !target/*-runner
 !target/*-runner.jar
 !target/lib/*

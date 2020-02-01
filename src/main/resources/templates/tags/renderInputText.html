@@ -1,4 +1,5 @@
 {#if form.hasErrors}
+{#if form.fieldHasError(fieldName)}
 <label for="{fieldName}" class="text-danger"><i class="icon ion-md-clipboard"></i> {label}</label>
 <input id="{fieldName}"
        name="{fieldName}"
@@ -20,4 +21,16 @@
        value="{form.fieldValue(fieldName)}">
 <small id="{fieldName}Help" class="form-text text-muted">{helpText}</small>
 {/if}
+{#else}
+<label for="{fieldName}" class=""><i class="icon ion-md-clipboard"></i> {label}</label>
+<input id="{fieldName}"
+       name="{fieldName}"
+       type="text"
+       class="form-control"
+       aria-describedby={fieldName}Help"
+       placeholder="{placeholder}"
+       value="{form.fieldValue(fieldName)}">
+<small id="{fieldName}Help" class="form-text text-muted">{helpText}</small>
+{/if}
+
 

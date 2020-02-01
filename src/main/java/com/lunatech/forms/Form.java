@@ -83,9 +83,11 @@ public class Form {
         return false;
     }
 
+    public static boolean fieldHasError(Form form, String fieldName){
+        return form.formFieldWithErrors.getErrors().stream().anyMatch(e -> e.getFieldName().equals(fieldName));
+    }
+
     public static io.quarkus.qute.RawString fieldValue(Form form, String fieldName){
-        String toReturn = form.fieldMapper.getValue(fieldName).orElse("?");
-        System.out.println("form debug " + fieldName + "= " + toReturn);
         return form.fieldMapper.getValue(fieldName).map(v -> new RawString(v)).orElse(new RawString(""));
     }
 

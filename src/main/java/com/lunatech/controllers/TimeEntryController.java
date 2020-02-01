@@ -48,7 +48,7 @@ public class TimeEntryController {
     @Inject
     Engine engine;
 
-    Validation<TimeEntry> validation = new Validation<>();
+    private Validation<TimeEntry> validation = new Validation<>();
 
     @GET
     public TemplateInstance list() {
@@ -79,19 +79,15 @@ public class TimeEntryController {
     public Response save(@Form TimeEntryDTO timeEntryDTO) {
         Either<FormFieldWithErrors, TimeEntry> validTimeEntryOrError = validation.validate(timeEntryDTO);
 
-        if (validTimeEntryOrError.isLeft()) {
-            // A best practice is not to throw a WebApplicationException here, but to return a 400 Bad Request
-            // with the Form and a list of errors.
-            // In play2 framework we have a Form / FormFactory
-            FormFieldWithErrors formErrors = validTimeEntryOrError.getLeft();
+        return validTimeEntryOrError.fold(formErrors -> {
             logger.warn("Unable to persist a TimeEntry. Reason : " + formErrors.getErrorMessage());
             Object htmlContent = newTimeEntry.data("form", new com.lunatech.forms.Form("/times/new", formErrors));
             return Response.status(400, formErrors.getErrorMessage()).entity(htmlContent).build();
-        } else {
-            TimeEntry newTimeEntry = validTimeEntryOrError.get();
+        }, newTimeEntry -> {
             timeEntryService.persist(newTimeEntry);
             return Response.seeOther(URI.create("/times")).build();
-        }
+        });
+
     }
 
 }

@@ -1,7 +1,8 @@
 package com.lunatech.controllers;
 
-import com.lunatech.forms.FormErrors;
-import com.lunatech.forms.FormFieldWithError;
+import com.lunatech.forms.Form;
+import com.lunatech.forms.FormFieldWithErrors;
+import com.lunatech.forms.Validation;
 import com.lunatech.models.TimeEntry;
 import com.lunatech.models.TimeEntryDTO;
 import com.lunatech.services.TimeEntryService;
@@ -9,7 +10,6 @@ import io.quarkus.qute.Engine;
 import io.quarkus.qute.Template;
 import io.quarkus.qute.TemplateInstance;
 import io.vavr.control.Either;
-import org.jboss.resteasy.annotations.Form;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -19,8 +19,11 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.util.List;
+
 import org.jboss.logging.Logger;
+
 import static javax.ws.rs.core.MediaType.APPLICATION_FORM_URLENCODED;
+
 
 @Path("/times")
 @Produces(MediaType.TEXT_HTML)
@@ -45,6 +48,8 @@ public class TimeEntryController {
     @Inject
     Engine engine;
 
+    private Validation<TimeEntry> validation = new Validation<>();
+
     @GET
     public TemplateInstance list() {
         List<TimeEntry> entries = TimeEntry.listAll();
@@ -64,28 +69,27 @@ public class TimeEntryController {
     @GET
     @Path("/new")
     public TemplateInstance prepareNew() {
-        return newTimeEntry.instance();
+        // I think since we don't have a router, that we can try to keep URI in the Controller.
+        // Maybe a Qute template should not store hard-coded URI ?
+        return newTimeEntry.data("zeForm", new Form("/times/new"));
     }
 
     @POST
     @Path("/new")
     @Consumes(APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_HTML)
-    public Response save(@Form TimeEntryDTO timeEntryDTO) {
-        Either<FormFieldWithError, TimeEntry> validTimeEntryOrError = timeEntryDTO.toValidTimeEntry();
-        if (validTimeEntryOrError.isLeft()) {
-            // A best practice is not to throw a WebApplicationException here, but to return a 400 Bad Request
-            // with the Form and a list of errors.
-            // In play2 framework we have a Form / FormFactory
-            FormFieldWithError error = validTimeEntryOrError.getLeft();
-            logger.warn("Unable to persist a TimeEntry. Reason : " + error.getErrorMessage());
-            Object htmlContent=newTimeEntry.data("formErrors", new FormErrors(error));
-            return Response.status(400, error.getErrorMessage()).entity(htmlContent).build();
-        } else {
-            TimeEntry newTimeEntry = validTimeEntryOrError.get();
+    public Response save(@org.jboss.resteasy.annotations.Form TimeEntryDTO timeEntryDTO) {
+        Either<FormFieldWithErrors, TimeEntry> validTimeEntryOrError = validation.validate(timeEntryDTO);
+
+        return validTimeEntryOrError.fold(formErrors -> {
+            logger.warn("Unable to persist a TimeEntry. Reason : " + formErrors.getErrorMessage());
+            Object htmlContent = newTimeEntry.data("zeForm", new Form("/times/new", timeEntryDTO ,formErrors));
+            return Response.status(400, formErrors.getErrorMessage()).entity(htmlContent).build();
+        }, newTimeEntry -> {
             timeEntryService.persist(newTimeEntry);
             return Response.seeOther(URI.create("/times")).build();
-        }
+        });
+
     }
 
 }

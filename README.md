@@ -114,6 +114,12 @@ If you want to add a new Quarkus extension :
 You can also use `jenv` utility.
 > jenv add /Library/Java/JavaVirtualMachines/graalvm-ce-19.2.1/Contents/Home
 
+For Mac OS user with Catalina, if you get a security warning, [that's a know issue with GraalVM](https://github.com/oracle/graal/issues/1724)
+Just do : 
+
+> sudo xattr -r -d com.apple.quarantine /Library/Java/JavaVirtualMachines/graalvm-ce-19.2.1/Contents/Home                                                                       
+    
+
 Check that Graal VM is configured 
 
 ```

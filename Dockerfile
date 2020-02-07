@@ -27,7 +27,7 @@ WORKDIR /work/
 COPY --from=build /usr/src/app/target/*-runner /work/application
 RUN chmod 775 /work
 EXPOSE 8080
-ARG QOVERY_DATABASE_MY_POSTGRESQL_6132005_URI
+ARG QOVERY_DATABASE_MY_POSTGRESQL_6132005_CONNECTION_URI
 LABEL version=1.2
 LABEL description="Quarkus distro less timekeeper 1.2"
-CMD ["./application", "-Dquarkus.http.host=0.0.0.0", "-Dquarkus.log.level=FINEST", "-Dquarkus.log.console.level=FINEST", "-Dquarkus.datasource.url=${QOVERY_DATABASE_MY_POSTGRESQL_6132005_URI}"]
+CMD ["./application", "-Dquarkus.http.host=0.0.0.0", "-Dquarkus.log.level=FINEST", "-Dquarkus.log.console.level=FINEST", "-Dquarkus.datasource.url=${QOVERY_DATABASE_MY_POSTGRESQL_6132005_CONNECTION_URI}"]

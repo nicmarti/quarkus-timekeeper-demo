@@ -27,7 +27,13 @@ WORKDIR /work/
 COPY --from=build /usr/src/app/target/*-runner /work/application
 RUN chmod 775 /work
 EXPOSE 8080
-ARG QOVERY_DATABASE_MY_POSTGRESQL_6132005_CONNECTION_URI
+ARG QOVERY_DATABASE_MY_POSTGRESQL_6132005_DATABASE
+ARG QOVERY_DATABASE_MY_POSTGRESQL_6132005_USERNAME
+ARG QOVERY_DATABASE_MY_POSTGRESQL_6132005_PASSWORD
+ARG QOVERY_DATABASE_MY_POSTGRESQL_6132005_HOST
+ARG QOVERY_DATABASE_MY_POSTGRESQL_6132005_PORT
 LABEL version=1.2
 LABEL description="Quarkus distro less timekeeper 1.2"
-CMD ["./application", "-Dquarkus.http.host=0.0.0.0", "-Dquarkus.log.level=FINEST", "-Dquarkus.log.console.level=FINEST", "-Dquarkus.datasource.url=jdbc:${QOVERY_DATABASE_MY_POSTGRESQL_6132005_CONNECTION_URI}"]
+# We cannot injet an URI here with username:password@host as it is not supported by the JDBC driver.
+# This is why we have to specify each argument
+CMD ["./application", "-Dquarkus.http.host=0.0.0.0", "-Dquarkus.log.level=FINEST", "-Dquarkus.log.console.level=FINEST", "-Dquarkus.datasource.url=jdbc:postgresql://${QOVERY_DATABASE_MY_POSTGRESQL_6132005_HOST}:${QOVERY_DATABASE_MY_POSTGRESQL_6132005_PORT}/${QOVERY_DATABASE_MY_POSTGRESQL_6132005_DATABASE}", "-Dquarkus.datasource.username=${QOVERY_DATABASE_MY_POSTGRESQL_6132005_USERNAME}", "-Dquarkus.datasource.password=${QOVERY_DATABASE_MY_POSTGRESQL_6132005_PASSWORD}"]

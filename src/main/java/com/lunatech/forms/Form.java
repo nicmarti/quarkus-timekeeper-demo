@@ -83,12 +83,19 @@ public class Form {
         return false;
     }
 
-    public static boolean fieldHasError(Form form, String fieldName){
+    public static boolean fieldHasError(final Form form, final String fieldName){
+        if(form == null || form.formFieldWithErrors == null) {
+            return false;
+        }
+        if(fieldName==null) return false;
         return form.formFieldWithErrors.getErrors().stream().anyMatch(e -> e.getFieldName().equals(fieldName));
     }
 
-    public static io.quarkus.qute.RawString fieldValue(Form form, String fieldName){
-        return form.fieldMapper.getValue(fieldName).map(v -> new RawString(v)).orElse(new RawString(""));
+    public static io.quarkus.qute.RawString fieldValue(final Form form, final String fieldName){
+        if(form == null || form.formFieldWithErrors == null || fieldName==null) {
+            return new RawString("");
+        }
+        return form.fieldMapper.getValue(fieldName).map(RawString::new).orElse(new RawString(""));
     }
 
     @Override

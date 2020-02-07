@@ -5,6 +5,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * This class is a data holder that is used to store the list of errors (or none) when an HTTP form was submitted to the server.
+ */
 public class FormFieldWithErrors {
     private List<FormError> errors;
 
@@ -26,7 +29,9 @@ public class FormFieldWithErrors {
         }
 
     }
-
+    public static FormFieldWithErrors prepareNew() {
+        return new FormFieldWithErrors();
+    }
 
     public FormFieldWithErrors() {
         this.errors = Collections.unmodifiableList(Collections.emptyList());
@@ -36,7 +41,7 @@ public class FormFieldWithErrors {
         this.errors = Collections.unmodifiableList(errors);
     }
 
-    public FormFieldWithErrors nonEmpty(String fieldName, String fieldValue) {
+    public FormFieldWithErrors assertNonEmpty(String fieldName, String fieldValue) {
         if (fieldValue == null) {
             return this.addNewError(fieldName, fieldName + " cannot be empty");
         }
@@ -44,10 +49,6 @@ public class FormFieldWithErrors {
             return this.addNewError(fieldName, fieldName + " cannot be empty");
         }
         return this;
-    }
-
-    public static FormFieldWithErrors prepareNew() {
-        return new FormFieldWithErrors();
     }
 
     public FormFieldWithErrors addNewError(String fieldName, String errorMsg) {
@@ -58,14 +59,16 @@ public class FormFieldWithErrors {
     }
 
     public boolean hasErrors() {
+        if(errors==null) return false;
         return !errors.isEmpty();
     }
 
     public List<FormError> getErrors() {
-        return errors;
+        return Collections.unmodifiableList(errors);
     }
 
     public String getErrorMessage() {
+        if(errors == null) return "";
         if (errors.isEmpty()) {
             return "";
         } else {

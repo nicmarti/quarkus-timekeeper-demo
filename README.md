@@ -48,7 +48,6 @@ The application is now runnable using `java -jar target/timekeeper-1.2.0-SNAPSHO
 
 Open a web browser and check that http://localhost:8080/ load the home page. 
 
-
 ## Creating a native executable
 
 If GraalVM is configured on your server, you can create a native executable using: `./mvnw package -Pnative`.
@@ -58,7 +57,6 @@ Or you can use Docker to build the native executable using: `./mvnw package -Pna
 You can then execute your binary: `./target/timekeeper-1.2.0-SNAPSHOT-runner`
 
 If you want to learn more about building native executables, please consult https://quarkus.io/guides/building-native-image-guide .
-
 
 ## Package to a native app
 
@@ -137,7 +135,6 @@ You should then be able to install 'native-image'
 
 `gu install native-image`
 
-Once i
 
 See also this blog article [by Software Mill](https://blog.softwaremill.com/graalvm-installation-and-setup-on-macos-294dd1d23ca2)
 

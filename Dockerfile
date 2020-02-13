@@ -12,7 +12,7 @@
 # see also https://quay.io/repository/quarkus/centos-quarkus-maven?tab=tags
 # see doc https://quarkus.io/guides/building-native-image#creating-a-container-with-a-multi-stage-docker-build
 # ---
-FROM quay.io/quarkus/ubi-quarkus-native-image:19.3.1 as nativebuilder
+FROM quay.io/quarkus/ubi-quarkus-native-image:19.3.1-java8 as nativebuilder
 RUN mkdir -p /tmp/ssl-libs/lib \
   && cp /opt/graalvm/jre/lib/security/cacerts /tmp/ssl-libs \
   && cp /opt/graalvm/jre/lib/amd64/libsunec.so /tmp/ssl-libs/lib/

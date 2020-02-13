@@ -7,17 +7,20 @@
 # Quarkus 1.2.0 final is required - It is normally set in pom.xml
 #########################################################################################################
 
-## Stage 1 : build with maven builder image with native capabilities
-# see https://github.com/quarkusio/quarkus-images
-# see also https://quay.io/repository/quarkus/centos-quarkus-maven?tab=tags
-# see doc https://quarkus.io/guides/building-native-image#creating-a-container-with-a-multi-stage-docker-build
-# ---
+## Stage 0 :
+# We need SSL libraries for SSL support on the native image
+#  see https://quarkus.io/guides/native-and-ssl
 FROM quay.io/quarkus/ubi-quarkus-native-image:19.3.1-java8 as nativebuilder
 RUN mkdir -p /tmp/ssl-libs/lib \
   && cp /opt/graalvm/jre/lib/security/cacerts /tmp/ssl-libs \
   && cp /opt/graalvm/jre/lib/amd64/libsunec.so /tmp/ssl-libs/lib/
 
-FROM quay.io/quarkus/centos-quarkus-maven:19.2.1 AS build
+## Stage 1 : build with maven builder image with native capabilities
+# see https://github.com/quarkusio/quarkus-images
+# see also https://quay.io/repository/quarkus/centos-quarkus-maven?tab=tags
+# see doc https://quarkus.io/guides/building-native-image#creating-a-container-with-a-multi-stage-docker-build
+# ---
+FROM quay.io/quarkus/centos-quarkus-maven:19.3.1-java8 AS build
 COPY src /usr/src/app/src
 COPY pom.xml /usr/src/app
 USER root

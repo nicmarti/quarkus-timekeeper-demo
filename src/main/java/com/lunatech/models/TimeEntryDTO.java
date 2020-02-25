@@ -1,8 +1,8 @@
 package com.lunatech.models;
 
-import com.lunatech.forms.FormDTO;
-import com.lunatech.forms.FormFieldWithErrors;
-import com.lunatech.forms.Validatable;
+import org.lunatech.formidable.FormDTO;
+import org.lunatech.formidable.FormFieldWithErrors;
+import org.lunatech.formidable.Validatable;
 import io.vavr.control.Either;
 
 import javax.ws.rs.FormParam;

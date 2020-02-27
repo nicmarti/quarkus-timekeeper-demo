@@ -1,7 +1,5 @@
-{@org.lunatech.formidable.Form form}
-
 {#if form.hasErrors}
-{#if form.fieldHasError(fieldName)}
+{#if form.isFieldInvalid(fieldName)}
 <label for="{fieldName}" class="text-danger"><i class="icon ion-md-clipboard"></i> {label}</label>
 <input id="{fieldName}"
        name="{fieldName}"

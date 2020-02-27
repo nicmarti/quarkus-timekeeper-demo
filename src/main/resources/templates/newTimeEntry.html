@@ -1,4 +1,3 @@
-{@org.lunatech.formidable.Form zeForm}
 {#include base.html}
 {#title}New Time Entry{/title}
 
@@ -14,7 +13,7 @@
 
                 {! There is no CSRF protection here !}
 
-                {form.renderIfErrors ?: ''}
+                {form.getRenderIfErrors ?: ''}
 
                 <div class="form-group">
                     {#renderInputText form=zeForm fieldName="description" label="Task description :" placeholder="Enter task description" helpText="Required. Be as descriptive as possible. Explain what you worked on today."}{/renderInputText}
